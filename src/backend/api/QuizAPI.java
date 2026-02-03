@@ -1,5 +1,9 @@
-package backend;
+package backend.api;
 
+import backend.model.Questao;
+import backend.persistence.GerenciadorArquivos;
+import backend.model.Jogador;
+import backend.persistence.GerenciadorRanking;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,5 +84,21 @@ public class QuizAPI {
 
     public String getNickname() {
         return nickname;
+    }
+    /**
+     * CORRETO: Agora usa a classe Jogador do pacote model
+     */
+    public List<Jogador> getTop3Ranking() throws Exception {
+        GerenciadorRanking ranking = new GerenciadorRanking();
+        return ranking.getTop3(); // O método getTop3 já retorna List<Jogador>
+    }
+
+    /**
+     * Este aqui estava certo, mas certifique-se de que o método salvarPontuacao
+     * lá no GerenciadorRanking aceita (String, int).
+     */
+    public void salvarRanking() throws Exception {
+        GerenciadorRanking ranking = new GerenciadorRanking();
+        ranking.salvarPontuacao(this.nickname, this.pontuacaoTotal);
     }
 }
