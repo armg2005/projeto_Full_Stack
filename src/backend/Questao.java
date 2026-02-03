@@ -4,10 +4,10 @@ public class Questao {
     private int id;
     private String frase;
     private int categoria;
-    private boolean resposta; // Armazena V (true) ou F (false)
-    private String nivelDificuldade; // F, M ou D
+    private boolean resposta;
+    private String nivelDificuldade;
 
-    // Construtor
+
     public Questao(int id, String frase, int categoria, boolean resposta, String nivelDificuldade) {
         this.id = id;
         this.frase = frase;
@@ -16,18 +16,14 @@ public class Questao {
         this.nivelDificuldade = nivelDificuldade;
     }
 
-    // Getters
+
     public int getId() { return id; }
     public String getFrase() { return frase; }
     public int getCategoria() { return categoria; }
     public boolean isResposta() { return resposta; }
     public String getNivelDificuldade() { return nivelDificuldade; }
 
-    /**
-     * Converte a letra do nível em um número para o cálculo da pontuação.
-     * @return 1 para Fácil, 2 para Médio, 3 para Difícil.
-     * @throws IllegalArgumentException se o nível não for F, M ou D.
-     */
+
     public int getNivelNumerico() {
         if (this.nivelDificuldade == null) {
             throw new IllegalArgumentException("O nível de dificuldade não pode ser nulo.");
