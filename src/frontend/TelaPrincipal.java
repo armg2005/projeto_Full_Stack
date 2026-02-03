@@ -1,13 +1,16 @@
 package frontend;
 
+import javax.swing.Timer;
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import backend.api.QuizAPI;
+import backend.model.Jogador;
 
 public class TelaPrincipal extends JFrame {
     // Componentes que precisaremos acessar depois (Regra 1.1)
-    private JPanel panel1;
+
+    private QuizAPI quizAPI;
     private JTextField txtNickname;
     private JTextArea areaTutorial;
     private JButton btnIniciar;
@@ -32,7 +35,7 @@ public class TelaPrincipal extends JFrame {
         add(titulo);
 
         // 2. Campo Nickname (Requisito 1.1)
-        JLabel lblNick = new JLabel("Nickname do Aluno:");
+        JLabel lblNick = new JLabel("Seu nome:");
         lblNick.setBounds(50, 90, 150, 25);
         lblNick.setForeground(Color.WHITE);
         add(lblNick);
@@ -46,18 +49,18 @@ public class TelaPrincipal extends JFrame {
 
         // 3. Área de Tutorial e Regras (Requisito 1.1 e 1.4)
         areaTutorial = new JTextArea();
-        areaTutorial.setText("BEM-VINDO AO TUTORIAL DO QUIZ!\n\n" +
+        areaTutorial.setText("LEIA ISSO EMEDIATAMENTE!!!\n\n" +
                 "• Responda perguntas de V/F ou Múltipla Escolha.\n" +
                 "• Você tem no máximo 60 segundos por questão.\n" +
                 "• Pontuação: 1200 * dificuldade / (tempo * questões).\n" +
-                "• O Nickname é obrigatório para salvar no Ranking.\n\n" +
-                "Boa sorte, futuro desenvolvedor!");
+                "• O Nickname é obrigatório para salvar no Ranking.");
         areaTutorial.setLineWrap(true);
         areaTutorial.setWrapStyleWord(true);
         areaTutorial.setEditable(false);
         areaTutorial.setBackground(new Color(60, 63, 65));
-        areaTutorial.setForeground(new Color(187, 187, 187));
+        areaTutorial.setForeground(Color.BLACK);
         areaTutorial.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        areaTutorial.setBackground(Color.blue);
 
         JScrollPane scrollTutorial = new JScrollPane(areaTutorial);
         scrollTutorial.setBounds(50, 140, 500, 150);
@@ -110,16 +113,74 @@ public class TelaPrincipal extends JFrame {
             if (nick.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Erro: Digite seu Nickname antes de iniciar!");
             } else {
-                // 1. Cria a nova tela de jogo
-                TelaDoJogo telaJogo = new TelaDoJogo(qpSelecionado);
+                try {
+                    // 1. Criamos a API passando o arquivo CSV que seu amigo mandou
+                    QuizAPI api = new QuizAPI("efeito-estufa.csv");
 
-                // 2. Faz a tela de jogo aparecer
-                telaJogo.setVisible(true);
+                    // 2. Configuramos a quantidade escolhida e o nick
+                    api.setQuantidadePerguntas(qpSelecionado);
+                    api.iniciarJogo(nick);
 
-                // 3. Fecha (ou esconde) a tela principal
-                this.dispose();
+                    // 3. Criamos a tela de jogo passando o objeto API completo
+                    TelaDoJogo telaJogo = new TelaDoJogo(api);
+
+                    telaJogo.setVisible(true);
+                    this.dispose();
+
+                } catch (Exception ex) {
+                    // Caso o arquivo não exista ou o nick seja inválido
+                    JOptionPane.showMessageDialog(this, "Erro ao iniciar quiz: " + ex.getMessage());
+                }
             }
         });
+
+        Timer pisca = new Timer(500, e -> {
+            if(areaTutorial.getBackground().equals(Color.blue)){
+                areaTutorial.setBackground(Color.red);
+            }else{
+                areaTutorial.setBackground(Color.blue);
+            }
+        });
+
+        pisca.start();
+        try {
+            QuizAPI apiParaRanking = new QuizAPI("efeito-estufa.csv");
+            atualizarTabelaRanking(apiParaRanking);
+        } catch (Exception e) {
+            System.out.println("Aviso: Não foi possível carregar o ranking inicial.");
+        }
+
+    }
+
+    public void atualizarTabelaRanking(QuizAPI quizAPI) {
+        try {
+            // 1. Instancia a classe onde está o método getTop3 (ajuste o nome se necessário)
+            List<Jogador> top3 = quizAPI.getTop3Ranking(); // Pega a lista do back-end
+            // 2. Cria a matriz que o JTable exige (3 linhas, 3 colunas)
+            Object[][] dadosRanking = new Object[3][3];
+
+            // 3. Loop para preencher a matriz com os dados dos Jogadores
+            for (int i = 0; i < 3; i++) {
+                if (i < top3.size()) {
+                    Jogador j = top3.get(i);
+                    dadosRanking[i][0] = (i + 1) + "º"; // Posição
+                    dadosRanking[i][1] = j.getNome();   // Nome
+                    dadosRanking[i][2] = j.getPontuacao(); // Pontuação
+                } else {
+                    // Se não tiver 3 jogadores ainda, mantém o vazio
+                    dadosRanking[i][0] = (i + 1) + "º";
+                    dadosRanking[i][1] = "---";
+                    dadosRanking[i][2] = "0";
+                }
+            }
+
+            // 4. Aplica os novos dados na tabela que já existe na tela
+            String[] colunas = {"Posição", "Jogador", "Pontuação"};
+            tabelaRanking.setModel(new javax.swing.table.DefaultTableModel(dadosRanking, colunas));
+
+        } catch (Exception e) {
+            System.out.println("Erro ao carregar ranking: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
