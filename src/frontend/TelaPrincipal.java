@@ -154,7 +154,6 @@ public class TelaPrincipal extends JFrame {
 
     public void atualizarTabelaRanking(QuizAPI quizAPI) {
         try {
-            // 1. Instancia a classe onde está o método getTop3 (ajuste o nome se necessário)
             List<Jogador> top3 = quizAPI.getTop3Ranking(); // Pega a lista do back-end
             // 2. Cria a matriz que o JTable exige (3 linhas, 3 colunas)
             Object[][] dadosRanking = new Object[3][3];
