@@ -1,3 +1,7 @@
+/**
+ * Autores: Alisson Ricady e Gustavo Rodrigues
+ */
+
 package test;
 
 import backend.api.QuizAPI;
