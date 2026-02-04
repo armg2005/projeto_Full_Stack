@@ -53,6 +53,7 @@ public class TelaDoJogo extends JFrame {
             btnOpcoes[i] = new JButton();
             btnOpcoes[i].setBounds(100, 200 + (i * 60), 400, 45);
             btnOpcoes[i].setFocusPainted(false);
+            btnOpcoes[i].setBackground(Color.gray);
             add(btnOpcoes[i]);
         }
 
@@ -84,15 +85,39 @@ public class TelaDoJogo extends JFrame {
     private void processarResposta(boolean respostaUsuario) {
         if (this.questaoAtual == null) return;
 
+        // 1. Para o relógio principal do jogo
         if (cronometro != null) cronometro.stop();
 
         int tempoGasto = 60 - tempoRestante;
 
-        //passsa as informaçoes da resposta pra API
-        quizAPI.responderQuestao(questaoAtual, respostaUsuario, tempoGasto);
+        btnOpcoes[0].setEnabled(false);
+        btnOpcoes[1].setEnabled(false);
 
-        perguntaAtual++;
-        proximaPergunta();
+        //Mostra quem era a certa e quem era a errada
+        if(questaoAtual.isResposta()){
+            btnOpcoes[0].setBackground(Color.green); //Verdadeiro era a certa
+            btnOpcoes[1].setBackground(Color.red);
+        } else {
+            btnOpcoes[1].setBackground(Color.green); //Falso era a certa
+            btnOpcoes[0].setBackground(Color.red);
+        }
+
+        //Timer de transição
+        Timer cronometroP = new Timer(1000, e -> {
+            //Volta as cores e reativa os botões para a próxima
+            btnOpcoes[0].setBackground(Color.gray);
+            btnOpcoes[1].setBackground(Color.gray);
+            btnOpcoes[0].setEnabled(true);
+            btnOpcoes[1].setEnabled(true);
+
+            //Processa os dados na API e vai para a próxima
+            quizAPI.responderQuestao(questaoAtual, respostaUsuario, tempoGasto);
+            perguntaAtual++;
+            proximaPergunta();
+        });
+
+        cronometroP.setRepeats(false);
+        cronometroP.start();
     }
 
     private void proximaPergunta() {
@@ -100,7 +125,7 @@ public class TelaDoJogo extends JFrame {
 
         if (questaoAtual != null) {
             lblContador.setText("Pergunta: " + perguntaAtual + "/" + quizAPI.getQuantidadePerguntas() +
-                    " | dificuldade: " + quizAPI.getProximaQuestao().getNivelDificuldade());
+                    " | dificuldade: " + questaoAtual.getNivelDificuldade());
             lblPergunta.setText("<html><center>" + questaoAtual.getFrase() + "</center></html>");
             iniciarCronometro();
         } else {

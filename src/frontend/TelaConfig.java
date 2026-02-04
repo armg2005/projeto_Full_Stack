@@ -9,9 +9,9 @@ import java.awt.*;
 public class TelaConfig extends JDialog {
     private JSpinner spinnerQp;
     private JButton btnSalvar;
-    private int quantidadePerguntas = 5;
+    private int quantidadePerguntas = 10;
 
-    public TelaConfig(Frame parent) {
+    public TelaConfig(Frame parent, int valorAtual) {
         super(parent, "Configurações do Quiz", true);
         setSize(300, 200);
         setLayout(null);
@@ -24,7 +24,7 @@ public class TelaConfig extends JDialog {
         add(lblInfo);
 
         //Spinner
-        SpinnerModel model = new SpinnerNumberModel(10, 5, 20, 1);
+        SpinnerModel model = new SpinnerNumberModel(valorAtual, 5, 20, 1);
         spinnerQp = new JSpinner(model);
         spinnerQp.setBounds(110, 70, 80, 30);
         add(spinnerQp);

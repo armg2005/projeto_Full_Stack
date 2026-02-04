@@ -19,7 +19,7 @@ public class TelaPrincipal extends JFrame {
     private JButton btnIniciar;
     private JButton btnConfig;
     private JTable tabelaRanking;
-    private int qpSelecionado = 10;
+    private int qpSelecionado = 5;
 
     public TelaPrincipal() {
         // Configurações da janela
@@ -85,7 +85,7 @@ public class TelaPrincipal extends JFrame {
         add(btnConfig);
         btnConfig.addActionListener(e -> {
             //Cria o objeto da tela de configuração
-            TelaConfig config = new TelaConfig(this);
+            TelaConfig config = new TelaConfig(this,this.qpSelecionado);
 
             //Faz o objeto aparecer na tela
             config.setVisible(true);
@@ -140,7 +140,7 @@ public class TelaPrincipal extends JFrame {
         });
 
         //sistema de pisca pisca
-        Timer pisca = new Timer(500, e -> {
+        Timer pisca = new Timer(1000, e -> {
             if(areaTutorial.getBackground().equals(Color.blue)){
                 areaTutorial.setBackground(Color.red);
             }else{
