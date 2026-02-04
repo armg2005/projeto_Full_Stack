@@ -2,7 +2,7 @@
  * Autores: Alisson Ricady e Gustavo Rodrigues
  */
 
-package backend.persistence;
+package backend.dao;
 
 import backend.model.Questao;
 
