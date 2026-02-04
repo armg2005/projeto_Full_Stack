@@ -1,3 +1,7 @@
+/**
+ * Autores: Alisson Ricady e Gustavo Rodrigues
+ */
+
 package backend.model;
 
 public class Jogador implements Comparable<Jogador> {
