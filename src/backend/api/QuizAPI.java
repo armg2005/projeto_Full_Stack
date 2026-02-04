@@ -5,9 +5,9 @@
 package backend.api;
 
 import backend.model.Questao;
-import backend.persistence.GerenciadorArquivos;
+import backend.dao.GerenciadorArquivos;
 import backend.model.Jogador;
-import backend.persistence.GerenciadorRanking;
+import backend.dao.GerenciadorRanking;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
