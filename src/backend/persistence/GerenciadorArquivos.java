@@ -1,3 +1,7 @@
+/**
+ * Autores: Alisson Ricady e Gustavo Rodrigues
+ */
+
 package backend.persistence;
 
 import backend.model.Questao;
