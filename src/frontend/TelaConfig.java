@@ -1,3 +1,6 @@
+/**
+ * Autores: Alisson Ricady e Gustavo Rodrigues
+ */
 package frontend;
 
 import javax.swing.*;
