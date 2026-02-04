@@ -6,10 +6,10 @@ import java.awt.*;
 public class TelaConfig extends JDialog {
     private JSpinner spinnerQp;
     private JButton btnSalvar;
-    private int quantidadePerguntas = 10; // Valor padrão
+    private int quantidadePerguntas = 5;
 
     public TelaConfig(Frame parent) {
-        super(parent, "Configurações do Quiz", true); // true para ser modal (trava a tela de trás)
+        super(parent, "Configurações do Quiz", true);
         setSize(300, 200);
         setLayout(null);
         setLocationRelativeTo(parent);
@@ -20,7 +20,7 @@ public class TelaConfig extends JDialog {
         lblInfo.setForeground(Color.WHITE);
         add(lblInfo);
 
-        // Spinner configurado entre 5 e 20 (Regra do Projeto)
+        //Spinner
         SpinnerModel model = new SpinnerNumberModel(10, 5, 20, 1);
         spinnerQp = new JSpinner(model);
         spinnerQp.setBounds(110, 70, 80, 30);
